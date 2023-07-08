@@ -34,15 +34,22 @@
 
 @code {
     List<ClassTeacher> getClassTeacher = new List<ClassTeacher>();
+    DialogOptions customScreen = new DialogOptions() { MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true, CloseButton = true };
 
     protected override async Task OnInitializedAsync()
     {
         getClassTeacher = await Http.GetFromJsonAsync<List<ClassTeacher>>("api/ClassTeachers/getAllTeachersDetails");
     }
 
-    private void OpenDialog(int detailID)
+    private async Task OpenDialog(int detailID)
     {
-        var options = new DialogOptions { CloseOnEscapeKey = true,MaxWidth = MaxWidth.Medium};
-        DialogService.Show<_EditDeleteDialog>("Edit/Delete", options);
+        var dialogParameter = new DialogParameters();
+        dialogParameter.Add("teacherID", detailID);
+        var result = DialogService.Show<_EditDeleteDialog>("Edit/Delete", dialogParameter, customScreen);
+        var responce = await result.Result;
+        if (!responce.Cancelled)
+        {
+            await OnInitializedAsync();
+        }
     }
 }

@@ -25,21 +25,21 @@ namespace TeacherTest.Server.Controllers
         [HttpGet("getAllTeachersDetails")]
         public async Task<ActionResult<IEnumerable<ClassTeacher>>> GetClassTeachers()
         {
-          if (_context.ClassTeachers == null)
-          {
-              return NotFound();
-          }
+            if (_context.ClassTeachers == null)
+            {
+                return NotFound();
+            }
             return await _context.ClassTeachers.ToListAsync();
         }
 
         // GET: api/ClassTeachers/5
-        [HttpGet("{id}")]
+        [HttpGet("teacherGetByID")]
         public async Task<ActionResult<ClassTeacher>> GetClassTeacher(int id)
         {
-          if (_context.ClassTeachers == null)
-          {
-              return NotFound();
-          }
+            if (_context.ClassTeachers == null)
+            {
+                return NotFound();
+            }
             var classTeacher = await _context.ClassTeachers.FindAsync(id);
 
             if (classTeacher == null)
@@ -52,7 +52,7 @@ namespace TeacherTest.Server.Controllers
 
         // PUT: api/ClassTeachers/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        [HttpPut("{id}")]
+        [HttpPut("EditTeacher")]
         public async Task<IActionResult> PutClassTeacher(int id, ClassTeacher classTeacher)
         {
             if (id != classTeacher.Id)
@@ -86,10 +86,10 @@ namespace TeacherTest.Server.Controllers
         [HttpPost("saveTeacherDetails")]
         public async Task<ActionResult<ClassTeacher>> PostClassTeacher(ClassTeacher classTeacher)
         {
-          if (_context.ClassTeachers == null)
-          {
-              return Problem("Entity set 'AddDbContext.ClassTeachers'  is null.");
-          }
+            if (_context.ClassTeachers == null)
+            {
+                return Problem("Entity set 'AddDbContext.ClassTeachers'  is null.");
+            }
             _context.ClassTeachers.Add(classTeacher);
             await _context.SaveChangesAsync();
 
@@ -97,7 +97,7 @@ namespace TeacherTest.Server.Controllers
         }
 
         // DELETE: api/ClassTeachers/5
-        [HttpDelete("{id}")]
+        [HttpDelete("deleteTeacher")]
         public async Task<IActionResult> DeleteClassTeacher(int id)
         {
             if (_context.ClassTeachers == null)

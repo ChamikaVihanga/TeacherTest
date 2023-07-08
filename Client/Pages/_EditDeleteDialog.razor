@@ -1,19 +1,41 @@
-﻿<MudDialog>
+﻿@inject HttpClient Http
+
+<MudDialog>
     <DialogContent>
-        <MudTextField T="string" Label="Name"></MudTextField>
-        <MudTextField T="string" Label="Age"></MudTextField>
-        <MudTextField T="string" Label="Subject"></MudTextField>
-        <MudTextField T="string" Label="Discription"></MudTextField>
+        <MudTextField @bind-Value="getClassTeacherByID.Name" Label="Name"></MudTextField>
+        <MudTextField @bind-Value="getClassTeacherByID.Age" Label="Age"></MudTextField>
+        <MudTextField @bind-Value="getClassTeacherByID.Subject" Label="Subject"></MudTextField>
+        <MudTextField @bind-Value="getClassTeacherByID.Discripation" Label="Discription"></MudTextField>
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Info" OnClick="Cancel">Edit</MudButton>
-        <MudButton Color="Color.Error" OnClick="Submit">Delete</MudButton>
+        <MudButton Color="Color.Info" OnClick="EditTeacher">Edit</MudButton>
+        <MudButton Color="Color.Error" OnClick="DeleteTeacher">Delete</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
-    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+    [CascadingParameter]
+    MudDialogInstance? MudDialog { get; set; }
 
-    void Submit() => MudDialog.Close(DialogResult.Ok(true));
-    void Cancel() => MudDialog.Cancel();
+    [Parameter]
+    public int teacherID { get; set; }
+
+    ClassTeacher getClassTeacherByID = new ClassTeacher();
+
+    protected override async Task OnInitializedAsync()
+    {
+        getClassTeacherByID = await Http.GetFromJsonAsync<ClassTeacher>($"api/ClassTeachers/teacherGetByID?id={teacherID}");
+    }
+
+    private async Task EditTeacher()
+    {
+        await Http.PutAsJsonAsync<ClassTeacher>($"api/ClassTeachers/EditTeacher?id={teacherID}", getClassTeacherByID);
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+
+    private async Task DeleteTeacher()
+    {
+        await Http.DeleteAsync($"api/ClassTeachers/deleteTeacher?id={teacherID}");
+        MudDialog.Close(DialogResult.Ok(true));
+    }
 }
