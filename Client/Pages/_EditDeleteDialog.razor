@@ -1,0 +1,19 @@
+﻿<MudDialog>
+    <DialogContent>
+        <MudTextField T="string" Label="Name"></MudTextField>
+        <MudTextField T="string" Label="Age"></MudTextField>
+        <MudTextField T="string" Label="Subject"></MudTextField>
+        <MudTextField T="string" Label="Discription"></MudTextField>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Info" OnClick="Cancel">Edit</MudButton>
+        <MudButton Color="Color.Error" OnClick="Submit">Delete</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void Cancel() => MudDialog.Cancel();
+}

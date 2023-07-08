@@ -1,0 +1,48 @@
+﻿@page "/TeacherDeatails"
+@inject HttpClient Http
+@inject IDialogService DialogService
+
+<MudGrid Class="my-1">
+<h3>Teacher Deatails</h3>
+<MudSpacer/>
+<MudItem>
+        <MudNavLink Href="teacher" Match="NavLinkMatch.Prefix"> <u>Back</u></MudNavLink>
+</MudItem>
+</MudGrid>
+
+<MudTable Items="@getClassTeacher" Hover="true" Breakpoint="Breakpoint.Sm" FixedHeader Dense Height="400px">
+    <HeaderContent>
+        <MudTh>Name</MudTh>
+        <MudTh>Age</MudTh>
+        <MudTh>Subject</MudTh>
+        <MudTh>Discription</MudTh> 
+        <MudTh></MudTh>
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>@context.Name</MudTd>
+        <MudTd>@context.Age</MudTd>
+        <MudTd>@context.Subject</MudTd>
+        <MudTd>@context.Discripation</MudTd>            
+        <MudTd>
+            <MudTooltip Text="Edit/Delete" Placement="Placement.Right">
+                <MudIconButton OnClick="@((e) => OpenDialog(context.Id))" Size="@Size.Small" Icon="@Icons.Material.Outlined.Edit" />
+            </MudTooltip>
+        </MudTd>
+    </RowTemplate>
+</MudTable>
+
+
+@code {
+    List<ClassTeacher> getClassTeacher = new List<ClassTeacher>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        getClassTeacher = await Http.GetFromJsonAsync<List<ClassTeacher>>("api/ClassTeachers/getAllTeachersDetails");
+    }
+
+    private void OpenDialog(int detailID)
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true,MaxWidth = MaxWidth.Medium};
+        DialogService.Show<_EditDeleteDialog>("Edit/Delete", options);
+    }
+}

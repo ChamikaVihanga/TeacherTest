@@ -1,0 +1,71 @@
+﻿@page "/teacher"
+@inject ISnackbar Snackbar
+@inject HttpClient Http;
+
+<PageTitle>Teacher</PageTitle>
+
+<h3>Enter Teacher Detail</h3>
+
+<MudGrid>
+    <MudItem xs="6">
+        <MudPaper Elevation="0" Class="align-content  py-1">
+            <MudContainer>
+                @*<MudGrid>*@
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="classTeacher.Name" Label="Teacher Name" Variant="Variant.Text"></MudTextField>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="classTeacher.Age" Label="Age" Mask="@(new PatternMask("00000"))" Variant="Variant.Text"></MudTextField>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="classTeacher.Subject" Label="Subject" Variant="Variant.Text"></MudTextField>
+                </MudItem>
+                <MudItem xs="6">
+                    <MudTextField @bind-Value="classTeacher.Discripation" Label="Discription" Variant="Variant.Text"></MudTextField>
+                </MudItem>
+                @*</MudGrid>*@
+                <MudItem>
+                    <MudPaper Elevation="0" Class="py-3">
+                        <MudButton class="py-2" Variant="Variant.Outlined" Color="Color.Success" @onclick="SaveDetails">Save</MudButton>
+                    </MudPaper>
+                    <MudNavLink Href="TeacherDeatails" Match="NavLinkMatch.Prefix"> <u>Show Teacher Details</u></MudNavLink>
+                </MudItem>
+            </MudContainer>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+
+
+
+@code {
+    ClassTeacher classTeacher = new ClassTeacher();
+
+    public async Task SaveDetails()
+    {
+        if (classTeacher.Name != null && classTeacher.Age != null && classTeacher.Subject != null && classTeacher.Discripation != null)
+        {
+            var result = await Http.PostAsJsonAsync<ClassTeacher>("api/ClassTeachers/saveTeacherDetails", classTeacher);
+            SnackBar();
+        }
+        else
+        {
+            Snackbar.Add("All fields required", Severity.Error);
+        }
+    }
+
+
+    public void CleanForm()
+    {
+        classTeacher.Name = string.Empty;
+        classTeacher.Age = string.Empty;
+        classTeacher.Subject = string.Empty;
+        classTeacher.Discripation = string.Empty;
+    }
+
+    public void SnackBar()
+    {
+        Snackbar.Add("Successfully Added", Severity.Success);
+        CleanForm();
+    }
+}
